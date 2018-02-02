@@ -19,9 +19,19 @@ class GameScene: SKScene {
     var ImageName: String?
     var bg = SKSpriteNode()
     var gameStarted = Bool()
+    var score = Int()
+    var ScoreLabel = SKLabelNode()
+
+    
 
     
     func createScene(){
+        
+        // ================ Adding Score =============
+        ScoreLabel.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2 + self.frame.height / 2.5)
+        ScoreLabel.text = "Score \(score)"
+        ScoreLabel.zPosition = 8
+        self.addChild(ScoreLabel)
         
         // ================ Adding background =============
         
@@ -43,6 +53,14 @@ class GameScene: SKScene {
         Ground.zPosition = 5
         
         self.addChild(Ground)
+        
+        // ============== Texture for animating the player  ==============
+        
+        TextureAtlas = SKTextureAtlas(named: "Player")
+        for i in 1...TextureAtlas.textureNames.count{
+            ImageName = "player\(i).png"
+            TextureArray.append(SKTexture(imageNamed: ImageName!))
+        }
         
         // ============== Adding player ==============
         Player = SKSpriteNode(imageNamed: "player1.png")
