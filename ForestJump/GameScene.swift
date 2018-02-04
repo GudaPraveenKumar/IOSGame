@@ -97,13 +97,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
 
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        addObstacles()
-
+        let spawn = SKAction.run({
+            () in
+            self.addObstacles()
+            
+        })
         // ============== Action for 2 seconds of time delay ============
         let delay = SKAction.wait(forDuration: 2)
 
         // ============== The above both actions are added in sequence to run ==========
-        let spawnDelay = SKAction.sequence([delay])
+        let spawnDelay = SKAction.sequence([spawn, delay])
 
         // ============== Action for repeating the above sequence forever ===========
         let spawnDelayForever = SKAction.repeatForever(spawnDelay)
