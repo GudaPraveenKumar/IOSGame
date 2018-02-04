@@ -9,7 +9,13 @@
 import SpriteKit
 import GameplayKit
 
-class GameScene: SKScene {
+struct PhysicsValues {
+    static let Player : UInt32 = 0x1 << 1
+    static let Obstacle : UInt32 = 0x1 << 2
+    static let Score : UInt32 = 0x1 << 3
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate{
 
     var Player = SKSpriteNode()
     var Ground = SKSpriteNode()
@@ -21,11 +27,13 @@ class GameScene: SKScene {
     var gameStarted = Bool()
     var score = Int()
     var ScoreLabel = SKLabelNode()
-
-
+    var ObstacleNode = SKNode()
+    var obstaclePair = SKNode()
 
 
     func createScene(){
+
+        self.physicsWorld.contactDelegate = self
 
         // ================ Adding Score =============
         ScoreLabel.position = CGPoint(x: self.frame.width / 2, y: self.frame.height / 2 + self.frame.height / 2.5)
@@ -63,13 +71,16 @@ class GameScene: SKScene {
         }
 
         // ============== Adding player ==============
+        
         Player = SKSpriteNode(imageNamed: "player1.png")
         Player.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
         Player.size = CGSize(width: 60, height: 80)
         Player.physicsBody = SKPhysicsBody(circleOfRadius: Player.frame.height/2)
         Player.physicsBody?.isDynamic = true
         Player.physicsBody?.affectedByGravity = false
-
+        Player.physicsBody?.categoryBitMask = PhysicsValues.Player
+        Player.physicsBody?.collisionBitMask = PhysicsValues.Obstacle
+        Player.physicsBody?.contactTestBitMask = PhysicsValues.Obstacle | PhysicsValues.Score
         Player.zPosition = 8
         Player.physicsBody?.allowsRotation = false
         self.addChild(Player)
@@ -86,6 +97,7 @@ class GameScene: SKScene {
 
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        addObstacles()
 
         // ============== Action for 2 seconds of time delay ============
         let delay = SKAction.wait(forDuration: 2)
@@ -111,6 +123,26 @@ class GameScene: SKScene {
 
     }
 
-
-
+    // ============== Function for adding obstacles ==============
+    
+    func addObstacles(){
+        
+        obstaclePair = SKNode()
+        
+        // ============== obstacle properties defined here ==============
+        let obstacle = SKSpriteNode(imageNamed: "box")
+        obstacle.position = CGPoint(x: self.frame.width, y: Ground.frame.height)
+        obstacle.physicsBody = SKPhysicsBody(circleOfRadius: obstacle.frame.height/2)
+        obstacle.physicsBody?.isDynamic = false
+        obstacle.setScale(0.5)
+        obstacle.physicsBody?.affectedByGravity = false
+        obstacle.zPosition = 8
+        obstaclePair.addChild(obstacle)
+        
+    
+        self.addChild(obstaclePair)
+        
+    }
+    
 }
+
