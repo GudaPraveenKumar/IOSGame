@@ -71,7 +71,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         }
 
         // ============== Adding player ==============
-        
+
         Player = SKSpriteNode(imageNamed: "player1.png")
         Player.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
         Player.size = CGSize(width: 60, height: 80)
@@ -100,7 +100,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         let spawn = SKAction.run({
             () in
             self.addObstacles()
-            
+
         })
         // ============== Action for 2 seconds of time delay ============
         let delay = SKAction.wait(forDuration: 2)
@@ -127,11 +127,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
 
     // ============== Function for adding obstacles ==============
-    
+
     func addObstacles(){
-        
+
         obstaclePair = SKNode()
-        
+
         // ============== obstacle properties defined here ==============
         let obstacle = SKSpriteNode(imageNamed: "box")
         obstacle.position = CGPoint(x: self.frame.width, y: Ground.frame.height)
@@ -139,13 +139,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         obstacle.physicsBody?.isDynamic = false
         obstacle.setScale(0.5)
         obstacle.physicsBody?.affectedByGravity = false
+        obstacle.physicsBody?.categoryBitMask = PhysicsValues.Obstacle
+        obstacle.physicsBody?.collisionBitMask = PhysicsValues.Player
+        obstacle.physicsBody?.contactTestBitMask = PhysicsValues.Player
         obstacle.zPosition = 8
         obstaclePair.addChild(obstacle)
-        
-    
-        self.addChild(obstaclePair)
-        
-    }
-    
-}
 
+        // ============== obstacles moves in the left direction ==============
+        let distance = CGFloat(self.frame.width + obstaclePair.frame.width)
+        let moveTargets = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(0.008*distance))
+        let removeTargets = SKAction.removeFromParent()
+        let moveAndRemove = SKAction.sequence([moveTargets,removeTargets])
+
+
+        obstaclePair.run(moveAndRemove)
+
+        self.addChild(obstaclePair)
+
+    }
+
+}
