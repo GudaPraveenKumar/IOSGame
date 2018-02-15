@@ -6,6 +6,7 @@
 //  Copyright © 2018 Praveen Guda. All rights reserved.
 //
 
+
 import SpriteKit
 import GameplayKit
 
@@ -93,14 +94,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
 
     }
 
-
-
-
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        Player.physicsBody?.affectedByGravity = true
         let spawn = SKAction.run({
             () in
             self.addObstacles()
-
+        
         })
         // ============== Action for 2 seconds of time delay ============
         let delay = SKAction.wait(forDuration: 2)
@@ -123,8 +122,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     }
 
     override func update(_ currentTime: TimeInterval) {
-
+        // Called before each frame is rendered
+        
+        // ============== Moving the background ================
+        enumerateChildNodes(withName: "background") { (node, error) in
+            self.bg = node as! SKSpriteNode
+            self.bg.position = CGPoint(x: self.bg.position.x-2, y: self.bg.position.y)
+            
+            if(self.bg.position.x <= -self.bg.size.width){
+                self.bg.position = CGPoint(x:self.bg.position.x + self.bg.size.width * 2-15, y: self.bg.position.y)
+            }
+        }
     }
+
 
     // ============== Function for adding obstacles ==============
 
@@ -152,9 +162,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         let moveAndRemove = SKAction.sequence([moveTargets,removeTargets])
 
 
+        // ============== Adding score node ===============
+        let scoreNode = SKSpriteNode()
+        scoreNode.size = CGSize(width: 4, height: 300)
+        scoreNode.position = CGPoint(x: self.frame.width, y: Ground.frame.height+obstacle.frame.height)
+        scoreNode.physicsBody = SKPhysicsBody(rectangleOf: scoreNode.size)
+        scoreNode.physicsBody?.isDynamic = true
+        scoreNode.physicsBody?.affectedByGravity = false
+        scoreNode.physicsBody?.categoryBitMask = PhysicsValues.Score
+        scoreNode.physicsBody?.collisionBitMask = 0
+        scoreNode.physicsBody?.contactTestBitMask = PhysicsValues.Player
+        obstaclePair.addChild(scoreNode)
+        
         obstaclePair.run(moveAndRemove)
-
         self.addChild(obstaclePair)
+
 
     }
 
