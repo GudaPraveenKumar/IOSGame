@@ -30,6 +30,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     var ScoreLabel = SKLabelNode()
     var ObstacleNode = SKNode()
     var obstaclePair = SKNode()
+    var PlayerDied = Bool()
 
 
     func createScene(){
@@ -84,6 +85,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
         Player.physicsBody?.contactTestBitMask = PhysicsValues.Obstacle | PhysicsValues.Score
         Player.zPosition = 8
         Player.physicsBody?.allowsRotation = false
+        Player.name = "Actor"
         self.addChild(Player)
 
     }
@@ -92,6 +94,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
 
       createScene()
 
+    }
+    
+    //  ============== Code for checking collisions  ==============
+    func didBegin(_ contact: SKPhysicsContact) {
+        let firstBody = contact.bodyA
+        let secondBody = contact.bodyB
+        
+        if firstBody.categoryBitMask == PhysicsValues.Score && secondBody.categoryBitMask == PhysicsValues.Player || firstBody.categoryBitMask == PhysicsValues.Player && secondBody.categoryBitMask == PhysicsValues.Score{
+            
+            score = score + 1
+            ScoreLabel.text = "Score \(score)"
+            
+        }
+        
+        if firstBody.categoryBitMask == PhysicsValues.Player && secondBody.categoryBitMask == PhysicsValues.Obstacle || firstBody.categoryBitMask == PhysicsValues.Obstacle && secondBody.categoryBitMask == PhysicsValues.Player{
+            
+            PlayerDied = true
+            gameStarted = false
+            
+            enumerateChildNodes(withName: "obstaclePair", using: ({
+                (node, error) in
+                
+                node.speed = 0
+                self.removeAllActions()
+                
+            }))
+            enumerateChildNodes(withName: "Actor", using: ({
+                (node, error) in
+                
+                node.speed = 0
+                self.removeAllActions()
+                
+            }))
+            
+            
+        }
+        
     }
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -141,6 +180,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate{
     func addObstacles(){
 
         obstaclePair = SKNode()
+        obstaclePair.name = "obstaclePair"
 
         // ============== obstacle properties defined here ==============
         let obstacle = SKSpriteNode(imageNamed: "box")
