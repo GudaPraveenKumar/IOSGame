@@ -16,6 +16,12 @@
 		AC55F2BD201671C000C58776 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC55F2BB201671C000C58776 /* Main.storyboard */; };
 		AC55F2BF201671C000C58776 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AC55F2BE201671C000C58776 /* Assets.xcassets */; };
 		AC55F2C2201671C000C58776 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AC55F2C0201671C000C58776 /* LaunchScreen.storyboard */; };
+		AC5B7B0D203B5F36002038DC /* Score.wav in Resources */ = {isa = PBXBuildFile; fileRef = AC5B7B0C203B5F35002038DC /* Score.wav */; };
+		AC5B7B0F203B653C002038DC /* 04B_19__.TTF in Resources */ = {isa = PBXBuildFile; fileRef = AC5B7B0E203B653C002038DC /* 04B_19__.TTF */; };
+		AC5B7B15203B6DBD002038DC /* StartScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = AC5B7B14203B6DBD002038DC /* StartScene.sks */; };
+		AC5B7B17203B7140002038DC /* StartScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC5B7B16203B7140002038DC /* StartScene.swift */; };
+		AC5B7B19203B7733002038DC /* playerDied.wav in Resources */ = {isa = PBXBuildFile; fileRef = AC5B7B18203B7733002038DC /* playerDied.wav */; };
+		AC5B7B1B203B8421002038DC /* BackgroundMusic.wav in Resources */ = {isa = PBXBuildFile; fileRef = AC5B7B1A203B8421002038DC /* BackgroundMusic.wav */; };
 		ACEDC495201DE44B003B49EA /* GetRandomValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = ACEDC494201DE44B003B49EA /* GetRandomValues.swift */; };
 /* End PBXBuildFile section */
 
@@ -31,6 +37,12 @@
 		AC55F2BE201671C000C58776 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AC55F2C1201671C000C58776 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AC55F2C3201671C000C58776 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AC5B7B0C203B5F35002038DC /* Score.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Score.wav; sourceTree = "<group>"; };
+		AC5B7B0E203B653C002038DC /* 04B_19__.TTF */ = {isa = PBXFileReference; lastKnownFileType = file; path = 04B_19__.TTF; sourceTree = "<group>"; };
+		AC5B7B14203B6DBD002038DC /* StartScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = StartScene.sks; sourceTree = "<group>"; };
+		AC5B7B16203B7140002038DC /* StartScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartScene.swift; sourceTree = "<group>"; };
+		AC5B7B18203B7733002038DC /* playerDied.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = playerDied.wav; sourceTree = "<group>"; };
+		AC5B7B1A203B8421002038DC /* BackgroundMusic.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = BackgroundMusic.wav; sourceTree = "<group>"; };
 		ACEDC494201DE44B003B49EA /* GetRandomValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetRandomValues.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -68,13 +80,19 @@
 				AC55F2B1201671C000C58776 /* AppDelegate.swift */,
 				AC55F2B3201671C000C58776 /* GameScene.sks */,
 				AC55F2B5201671C000C58776 /* Actions.sks */,
+				AC5B7B18203B7733002038DC /* playerDied.wav */,
+				AC5B7B0E203B653C002038DC /* 04B_19__.TTF */,
 				AC55F2B7201671C000C58776 /* GameScene.swift */,
+				AC5B7B1A203B8421002038DC /* BackgroundMusic.wav */,
 				AC55F2B9201671C000C58776 /* GameViewController.swift */,
+				AC5B7B0C203B5F35002038DC /* Score.wav */,
 				AC55F2BB201671C000C58776 /* Main.storyboard */,
 				AC55F2BE201671C000C58776 /* Assets.xcassets */,
 				AC55F2C0201671C000C58776 /* LaunchScreen.storyboard */,
+				AC5B7B16203B7140002038DC /* StartScene.swift */,
 				AC55F2C3201671C000C58776 /* Info.plist */,
 				ACEDC494201DE44B003B49EA /* GetRandomValues.swift */,
+				AC5B7B14203B6DBD002038DC /* StartScene.sks */,
 			);
 			path = ForestJump;
 			sourceTree = "<group>";
@@ -141,8 +159,13 @@
 				AC55F2BD201671C000C58776 /* Main.storyboard in Resources */,
 				AC55F2B4201671C000C58776 /* GameScene.sks in Resources */,
 				AC55F2BF201671C000C58776 /* Assets.xcassets in Resources */,
+				AC5B7B15203B6DBD002038DC /* StartScene.sks in Resources */,
 				AC55F2C2201671C000C58776 /* LaunchScreen.storyboard in Resources */,
+				AC5B7B19203B7733002038DC /* playerDied.wav in Resources */,
+				AC5B7B0F203B653C002038DC /* 04B_19__.TTF in Resources */,
 				AC25F2CE201CFC4000254772 /* Player.atlas in Resources */,
+				AC5B7B1B203B8421002038DC /* BackgroundMusic.wav in Resources */,
+				AC5B7B0D203B5F36002038DC /* Score.wav in Resources */,
 				AC55F2B6201671C000C58776 /* Actions.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -157,6 +180,7 @@
 				AC55F2B8201671C000C58776 /* GameScene.swift in Sources */,
 				ACEDC495201DE44B003B49EA /* GetRandomValues.swift in Sources */,
 				AC55F2BA201671C000C58776 /* GameViewController.swift in Sources */,
+				AC5B7B17203B7140002038DC /* StartScene.swift in Sources */,
 				AC55F2B2201671C000C58776 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
