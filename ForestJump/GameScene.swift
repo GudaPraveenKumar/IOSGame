@@ -290,7 +290,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let distance = CGFloat(self.frame.width + obstaclePair.frame.width)
         
-        let moveTargets = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(4))
+        let moveTargets = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(timeForScore()))
         let removeTargets = SKAction.removeFromParent()
         let moveAndRemove = SKAction.sequence([moveTargets,removeTargets])
         
@@ -305,6 +305,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreNode.physicsBody?.collisionBitMask = 0
         scoreNode.physicsBody?.contactTestBitMask = PhysicsValues.Player
         obstaclePair.addChild(scoreNode)
+        
+        // ============== Adding coin node ===============
+        let coinNode = SKSpriteNode(imageNamed: "coin")
+        coinNode.size = CGSize(width: 40, height: 40)
+        coinNode.position = CGPoint(x: self.frame.width, y: self.frame.height/2.5)
+        coinNode.physicsBody = SKPhysicsBody(circleOfRadius: coinNode.frame.height/3)
+        coinNode.physicsBody?.isDynamic = false
+        coinNode.physicsBody?.affectedByGravity = false
+        coinNode.physicsBody?.categoryBitMask = PhysicsValues.Coin
+        coinNode.physicsBody?.collisionBitMask = 0
+        coinNode.physicsBody?.contactTestBitMask = PhysicsValues.Player
+        coinNode.zPosition = 8
+        obstaclePair.addChild(coinNode)
         
         let coinNode = SKSpriteNode(imageNamed: "coin")
         coinNode.size = CGSize(width: 40, height: 40)
@@ -322,6 +335,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         obstaclePair.run(moveAndRemove)
         self.addChild(obstaclePair)
         
+    }
+
+    // Specifies the time duration for the given score
+    // Tweak this function to reduce/ increase the speed/score ratio
+    func timeForScore() -> Double {
+        time = 3.5
+        if(score > 7 && score < 14){
+            time = 3.0
+        }
+        if(score > 14 && score < 21){
+            time = 2.5
+        }
+        if(score > 21 && score < 28){
+            time = 2.0
+        }
+        if(score > 28 && score < 35){
+            time = 1.5
+        }
+        return time
     }
     
 }
