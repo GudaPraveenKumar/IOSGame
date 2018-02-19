@@ -49,7 +49,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func createScene(){
-       
+        
         
         self.physicsWorld.contactDelegate = self
         
@@ -92,7 +92,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // ============== Adding player ==============
         Player = SKSpriteNode(imageNamed: "player1.png")
-        Player.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
+        Player.position = CGPoint(x: self.frame.width/3, y: self.frame.height/2)
         Player.size = CGSize(width: 60, height: 80)
         Player.physicsBody = SKPhysicsBody(circleOfRadius: Player.frame.height/2)
         Player.physicsBody?.isDynamic = true
@@ -109,6 +109,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func didMove(to view: SKView) {
+        
+        let backgroundSound = SKAudioNode(fileNamed: "BackgroundMusic.wav")
+        self.addChild(backgroundSound)
         
         createScene()
         
@@ -197,7 +200,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if gameStarted == false{
             gameStarted = true
             Player.physicsBody?.affectedByGravity = true
-             Player.physicsBody?.angularVelocity = 0
+            Player.physicsBody?.angularVelocity = 0
             // ============== Action for calling the add walls ==============
             
             let spawn = SKAction.run({
@@ -205,7 +208,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 if(self.gameStarted == true){
                     self.addObstacles()
                 }
-            
+                
             })
             
             // ============== Action for 1.5 seconds of time delay ============
@@ -223,14 +226,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // ============== moving the player upwards when user tap on screen ============
             
             Player.run(SKAction.repeatForever(SKAction.animate(with: TextureArray, timePerFrame: 0.1)))
-           
+            
         }else{
             
             if(PlayerDied == true){
                 
             }else{
                 // ============== moving the player when user tap on screen ===============
-        
+                
                 if(Player.position.y < 97){
                     Player.physicsBody?.velocity = CGVector(dx: 0,dy: 0)
                     Player.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 185))
@@ -260,7 +263,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Called before each frame is rendered
         
         // ============== Moving the background ================
-         if gameStarted == true{
+        if gameStarted == true{
             enumerateChildNodes(withName: "background") { (node, error) in
                 self.bg = node as! SKSpriteNode
                 self.bg.position = CGPoint(x: self.bg.position.x-2, y: self.bg.position.y)
@@ -311,7 +314,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreNode.physicsBody?.contactTestBitMask = PhysicsValues.Player
         obstaclePair.addChild(scoreNode)
         
-        // ============== Adding coin node ===============
         let coinNode = SKSpriteNode(imageNamed: "coin")
         coinNode.size = CGSize(width: 40, height: 40)
         coinNode.position = CGPoint(x: self.frame.width, y: self.frame.height/2.5)
@@ -347,5 +349,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         return time
     }
-   
+    
 }
+
