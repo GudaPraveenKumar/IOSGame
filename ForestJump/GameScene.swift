@@ -33,7 +33,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var ScoreLabel = SKLabelNode()
     var PlayerDied = Bool()
     var restartBtn = SKSpriteNode()
+    var quitBtn = SKSpriteNode()
     var obstacleSpeed = 2
+    var time = Double()
     
     // ================ This function gets triggered whenever restart btn is clicked ============
     func restartScene(){
@@ -114,13 +116,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //  ============== Restart button gets created =================
     func createBtn(){
-        restartBtn = SKSpriteNode(imageNamed: "RestartBtn")
+        restartBtn = SKSpriteNode(imageNamed: "RestartBtn-1")
         restartBtn.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
         restartBtn.size = CGSize(width: 170, height: 50)
         restartBtn.zPosition = 12
         
-        self.run(SKAction.playSoundFileNamed("playerDiedMusic.mp3", waitForCompletion: true))
+        quitBtn = SKSpriteNode(imageNamed: "QuitBtn")
+        quitBtn.position = CGPoint(x: self.frame.width/2, y: self.frame.height/3)
+        quitBtn.size = CGSize(width: 170, height: 50)
+        quitBtn.zPosition = 12
+        
+        self.run(SKAction.playSoundFileNamed("playerDied.wav", waitForCompletion: true))
         self.addChild(restartBtn)
+        self.addChild(quitBtn)
         
     }
     
@@ -142,7 +150,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             ScoreLabel.text = "Score \(score)  Coins \(coin)"
             self.run(SKAction.playSoundFileNamed("Score.wav", waitForCompletion: true))
             Collectcoins(coinNode: firstBody.node as! SKSpriteNode)
-            
             
         }
         
@@ -182,12 +189,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func Collectcoins(coinNode: SKSpriteNode){
-        
-        
-        
         coinNode.removeFromParent()
-        
-        
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -246,6 +248,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     restartScene()
                 }
                 
+                if quitBtn.contains(location){
+                    exit(0)
+                }
             }
         }
         
@@ -290,7 +295,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let distance = CGFloat(self.frame.width + obstaclePair.frame.width)
         
-        let moveTargets = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(4))
+        let moveTargets = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(timeForScore()))
         let removeTargets = SKAction.removeFromParent()
         let moveAndRemove = SKAction.sequence([moveTargets,removeTargets])
         
@@ -306,6 +311,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreNode.physicsBody?.contactTestBitMask = PhysicsValues.Player
         obstaclePair.addChild(scoreNode)
         
+        // ============== Adding coin node ===============
         let coinNode = SKSpriteNode(imageNamed: "coin")
         coinNode.size = CGSize(width: 40, height: 40)
         coinNode.position = CGPoint(x: self.frame.width, y: self.frame.height/2.5)
@@ -318,10 +324,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         coinNode.zPosition = 8
         obstaclePair.addChild(coinNode)
         
-        
         obstaclePair.run(moveAndRemove)
         self.addChild(obstaclePair)
         
     }
     
+    // Specifies the time duration for the given score
+    // Tweak this function to reduce/ increase the speed/score ratio
+    func timeForScore() -> Double {
+        time = 3.5
+        if(score > 7 && score < 14){
+            time = 3.0
+        }
+        if(score > 14 && score < 21){
+            time = 2.5
+        }
+        if(score > 21 && score < 28){
+            time = 2.0
+        }
+        if(score > 28 && score < 35){
+            time = 1.5
+        }
+        return time
+    }
+   
 }
