@@ -41,15 +41,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func restartScene(){
         self.removeAllChildren()
         self.removeAllActions()
+        
         PlayerDied = false
         gameStarted = false
         score = 0
         coin = 0
+        let backgroundSound = SKAudioNode(fileNamed: "BackgroundMusic.wav")
+        self.addChild(backgroundSound)
         createScene()
     }
     
+    // ================ This function creates the game scene ============
     func createScene(){
-        
         
         self.physicsWorld.contactDelegate = self
         
@@ -60,9 +63,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ScoreLabel.zPosition = 8
         self.addChild(ScoreLabel)
         
-        
         // ================ Adding background =============
-        
         for i in 0..<2{
             background = SKSpriteNode(imageNamed: "mountains_bg")
             background.anchorPoint = CGPoint(x:0,y:0)
@@ -72,7 +73,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // ============== Adding ground ===========
-        
         Ground = SKSpriteNode(imageNamed: "ground")
         Ground.setScale(0.75)
         Ground.position = CGPoint(x: self.frame.width/2, y: 0+Ground.frame.height/5)
@@ -83,7 +83,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(Ground)
         
         // ============== Texture for animating the player  ==============
-        
         TextureAtlas = SKTextureAtlas(named: "Player")
         for i in 1...TextureAtlas.textureNames.count{
             ImageName = "player\(i).png"
@@ -92,7 +91,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // ============== Adding player ==============
         Player = SKSpriteNode(imageNamed: "player1.png")
-        Player.position = CGPoint(x: self.frame.width/3, y: self.frame.height/2)
+        Player.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
         Player.size = CGSize(width: 60, height: 80)
         Player.physicsBody = SKPhysicsBody(circleOfRadius: Player.frame.height/2)
         Player.physicsBody?.isDynamic = true
@@ -108,13 +107,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
+    // ============= Called immediately after a scene is presented by a view ==========
     override func didMove(to view: SKView) {
-        
         let backgroundSound = SKAudioNode(fileNamed: "BackgroundMusic.wav")
         self.addChild(backgroundSound)
-        
         createScene()
-        
     }
     
     //  ============== Restart button gets created =================
@@ -140,6 +137,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let firstBody = contact.bodyA
         let secondBody = contact.bodyB
         
+        // ============== When score node and player collides  ==============
         if firstBody.categoryBitMask == PhysicsValues.Score && secondBody.categoryBitMask == PhysicsValues.Player || firstBody.categoryBitMask == PhysicsValues.Player && secondBody.categoryBitMask == PhysicsValues.Score{
             
             score = score + 1
@@ -147,6 +145,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
         
+        // ============== When coin node and player collides  ==============
         if firstBody.categoryBitMask == PhysicsValues.Coin && secondBody.categoryBitMask == PhysicsValues.Player{
             
             coin = coin + 1
@@ -156,6 +155,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
         
+        // ============== When score node and player collides  ==============
         if firstBody.categoryBitMask == PhysicsValues.Player && secondBody.categoryBitMask == PhysicsValues.Coin{
             
             coin = coin + 1
@@ -164,45 +164,47 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             Collectcoins(coinNode: secondBody.node as! SKSpriteNode)
         }
         
+        // ============== When player and box collides and player die ==============
         if firstBody.categoryBitMask == PhysicsValues.Player && secondBody.categoryBitMask == PhysicsValues.Obstacle || firstBody.categoryBitMask == PhysicsValues.Obstacle && secondBody.categoryBitMask == PhysicsValues.Player{
             
             PlayerDied = true
             gameStarted = false
             Player.removeFromParent()
+            
+            // ============== Removing all obstacle actions ==============
             enumerateChildNodes(withName: "obstaclePair", using: ({
                 (node, error) in
-                
                 node.speed = 0
                 self.removeAllActions()
                 
             }))
+            
+            // ============== Removing all player actions ==============
             enumerateChildNodes(withName: "Actor", using: ({
                 (node, error) in
-                
                 node.speed = 0
                 self.removeAllActions()
-                
             }))
             // =============== Calling createBtn function to add restart btn ==========
             createBtn()
-            
-            
         }
-        
     }
     
+    // ============== Removing coins when player collects them ==============
     func Collectcoins(coinNode: SKSpriteNode){
         coinNode.removeFromParent()
     }
     
+    // ============== This is a pre-defined function called on every touch ==============
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         if gameStarted == false{
             gameStarted = true
+            
             Player.physicsBody?.affectedByGravity = true
             Player.physicsBody?.angularVelocity = 0
-            // ============== Action for calling the add walls ==============
             
+            // ============== Action for calling the adding obstacles ==============
             let spawn = SKAction.run({
                 () in
                 if(self.gameStarted == true){
@@ -224,50 +226,41 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.run(spawnDelayForever)
             
             // ============== moving the player upwards when user tap on screen ============
-            
             Player.run(SKAction.repeatForever(SKAction.animate(with: TextureArray, timePerFrame: 0.1)))
             
         }else{
             
-            if(PlayerDied == true){
-                
-            }else{
+            if(PlayerDied != true){
                 // ============== moving the player when user tap on screen ===============
-                
                 if(Player.position.y < 97){
                     Player.physicsBody?.velocity = CGVector(dx: 0,dy: 0)
                     Player.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 185))
                 }
             }
-            
         }
         
+        // ============== Checking whether restart or quit button is touched ==============
         for touch in touches{
-            
             let location = touch.location(in: self)
             if(PlayerDied == true){
-                
                 if restartBtn.contains(location){
                     restartScene()
                 }
-                
                 if quitBtn.contains(location){
                     exit(0)
                 }
             }
         }
-        
     }
     
+    // ============== Called before each frame is rendered ==============
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        
+ 
         // ============== Moving the background ================
         if gameStarted == true{
             enumerateChildNodes(withName: "background") { (node, error) in
                 self.bg = node as! SKSpriteNode
                 self.bg.position = CGPoint(x: self.bg.position.x-2, y: self.bg.position.y)
-                
                 if(self.bg.position.x <= -self.bg.size.width){
                     self.bg.position = CGPoint(x:self.bg.position.x + self.bg.size.width * 2-15, y: self.bg.position.y)
                 }
@@ -277,7 +270,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // ============== Function for adding obstacles ==============
     func addObstacles(){
-        
+
         obstaclePair = SKNode()
         obstaclePair.name = "obstaclePair"
         
@@ -294,10 +287,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         obstacle.zPosition = 8
         obstaclePair.addChild(obstacle)
         
-        // ============== obstacles moves in the left direction ==============
-        
+        // ============== obstacles moves in left direction and gets removed from scene ==============
         let distance = CGFloat(self.frame.width + obstaclePair.frame.width)
-        
         let moveTargets = SKAction.moveBy(x: -distance, y: 0, duration: TimeInterval(timeForScore()))
         let removeTargets = SKAction.removeFromParent()
         let moveAndRemove = SKAction.sequence([moveTargets,removeTargets])
@@ -314,6 +305,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreNode.physicsBody?.contactTestBitMask = PhysicsValues.Player
         obstaclePair.addChild(scoreNode)
         
+        // ============== Adding coin node ===============
         let coinNode = SKSpriteNode(imageNamed: "coin")
         coinNode.size = CGSize(width: 40, height: 40)
         coinNode.position = CGPoint(x: self.frame.width, y: self.frame.height/2.5)
@@ -326,13 +318,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         coinNode.zPosition = 8
         obstaclePair.addChild(coinNode)
         
+        // ========== moveAndRemove are the sequence actions to move and remove the obstacles =========
         obstaclePair.run(moveAndRemove)
         self.addChild(obstaclePair)
         
     }
-    
-    // Specifies the time duration for the given score
-    // Tweak this function to reduce/ increase the speed/score ratio
+    // ============== Specifies the time duration for the given score Tweak this function to reduce/ increase the speed/score ratio===============
+   
     func timeForScore() -> Double {
         time = 3.5
         if(score > 7 && score < 14){
@@ -346,6 +338,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         if(score > 28 && score < 35){
             time = 1.5
+        }
+        if(score > 35){
+            time = 1
         }
         return time
     }
