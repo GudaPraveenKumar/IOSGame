@@ -107,7 +107,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
-    // ============= Called immediately after a scene is presented by a view ==========
+    // ============= Called immediately after a scene is presented by a view and playing background music ==========
     override func didMove(to view: SKView) {
         let backgroundSound = SKAudioNode(fileNamed: "BackgroundMusic.wav")
         self.addChild(backgroundSound)
@@ -115,7 +115,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     //  ============== Restart button gets created =================
-    func createBtn(){
+    func createBtns(){
         restartBtn = SKSpriteNode(imageNamed: "RestartBtn-1")
         restartBtn.position = CGPoint(x: self.frame.width/2, y: self.frame.height/2)
         restartBtn.size = CGSize(width: 170, height: 50)
@@ -164,11 +164,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             Collectcoins(coinNode: secondBody.node as! SKSpriteNode)
         }
         
-        // ============== When player and box collides and player die ==============
+        // ============== When player collides box and player die ==============
         if firstBody.categoryBitMask == PhysicsValues.Player && secondBody.categoryBitMask == PhysicsValues.Obstacle || firstBody.categoryBitMask == PhysicsValues.Obstacle && secondBody.categoryBitMask == PhysicsValues.Player{
             
             PlayerDied = true
-            gameStarted = false
             Player.removeFromParent()
             
             // ============== Removing all obstacle actions ==============
@@ -185,8 +184,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 node.speed = 0
                 self.removeAllActions()
             }))
+            
+            // ============== Removing all background actions ==============
+            enumerateChildNodes(withName: "background", using: ({
+                (node, error) in
+                node.speed = 0
+                self.removeAllActions()
+            }))
+            
+            
             // =============== Calling createBtn function to add restart btn ==========
-            createBtn()
+            createBtns()
         }
     }
     
@@ -234,7 +242,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 // ============== moving the player when user tap on screen ===============
                 if(Player.position.y < 97){
                     Player.physicsBody?.velocity = CGVector(dx: 0,dy: 0)
-                    Player.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 185))
+                    Player.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 160))
                 }
             }
         }
@@ -255,9 +263,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // ============== Called before each frame is rendered ==============
     override func update(_ currentTime: TimeInterval) {
- 
+        
         // ============== Moving the background ================
-        if gameStarted == true{
+        if (gameStarted == true && PlayerDied == false){
             enumerateChildNodes(withName: "background") { (node, error) in
                 self.bg = node as! SKSpriteNode
                 self.bg.position = CGPoint(x: self.bg.position.x-2, y: self.bg.position.y)
@@ -270,7 +278,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // ============== Function for adding obstacles ==============
     func addObstacles(){
-
+        
         obstaclePair = SKNode()
         obstaclePair.name = "obstaclePair"
         
@@ -324,25 +332,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     // ============== Specifies the time duration for the given score Tweak this function to reduce/ increase the speed/score ratio===============
-   
+    
     func timeForScore() -> Double {
-        time = 3.5
-        if(score > 7 && score < 14){
-            time = 3.0
+        time = 2.5
+        if(score > 5 && score < 10){
+            time = 2
         }
-        if(score > 14 && score < 21){
-            time = 2.5
+        if(score > 10 && score < 15){
+            time = 1.7
         }
-        if(score > 21 && score < 28){
-            time = 2.0
+        if(score > 15 && score < 20){
+            time = 1.4
         }
-        if(score > 28 && score < 35){
-            time = 1.5
+        if(score > 20 && score < 35){
+            time = 0.9
         }
         if(score > 35){
-            time = 1
+            time = 0.7
         }
         return time
     }
     
 }
+
+
